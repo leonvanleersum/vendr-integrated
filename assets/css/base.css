@@ -1,15 +1,6 @@
 :root{
-  /* Basiskleuren – thema overschrijft deze var's */
-  --bg:#0b0c0e;           /* canvas */
-  --panel:#121417;        /* kaarten */
-  --panel-2:#171a1f;      /* header */
-  --text:#e6eaf0;
-  --muted:#9aa3b2;
-  --border:#232830;
-  --accent:#6ea8fe;
-  --ok:#22c55e;
-  --warn:#f59e0b;
-  --sold:#0f172a;
+  --bg:#0b0c0e;--panel:#121417;--panel-2:#171a1f;--text:#e6eaf0;
+  --muted:#9aa3b2;--border:#232830;--accent:#6ea8fe;--ok:#22c55e;--warn:#f59e0b;--sold:#0f172a;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -38,6 +29,3 @@ body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-ap
 .addr{margin:0;color:var(--muted)}
 .meta{margin:6px 0 0;color:var(--muted);font-size:12px}
 .actions{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border)}
-
-/* Utility for sr-only (accessibility) */
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

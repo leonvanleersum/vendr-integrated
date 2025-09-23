@@ -41,21 +41,60 @@
     return m ? m[2].trim() : tail.trim();
   }
 
-  // CORS‑vriendelijke fetch (mirror fallback voor GitHub Pages/file://)
+  function parseLooseJson(text){
+    const t = String(text || '').trim();
+    try { return JSON.parse(t); } catch(_) {}
+    let s = t.indexOf('['), e = t.lastIndexOf(']');
+    if (s !== -1 && e > s) {
+      const slice = t.slice(s, e+1);
+      try { return JSON.parse(slice); } catch(_) {}
+    }
+    s = t.indexOf('{'); e = t.lastIndexOf('}');
+    if (s !== -1 && e > s) {
+      const slice = t.slice(s, e+1);
+      try { return JSON.parse(slice); } catch(_) {}
+    }
+    throw new Error('Geen valide JSON in antwoord');
+  }
+
+  function withFormatVariant(url){
+    if (!url) return [];
+    try{
+      const u = new URL(url);
+      const v = new URL(u.href);
+      if (!v.searchParams.has('format')) v.searchParams.set('format','json');
+      return [u.href, v.href];
+    }catch{ return [url]; }
+  }
   function candidates(url){
-    const out=[url];
-    try { const u=new URL(url); out.push(`https://r.jina.ai/${u.href}`); out.push(`https://r.jina.ai/https://${u.host}${u.pathname}${u.search}`);} catch {}
+    const out = [];
+    for (const base of withFormatVariant(url)){
+      out.push(base);
+      try {
+        const u = new URL(base);
+        out.push(`https://r.jina.ai/${u.href}`);
+        out.push(`https://r.jina.ai/https://${u.host}${u.pathname}${u.search}`);
+        out.push(`https://r.jina.ai/http://${u.host}${u.pathname}${u.search}`);
+      } catch {}
+    }
     return [...new Set(out)];
   }
+
   async function fetchJson(url){
     const tried=[];
     for (const target of candidates(url)){
       try{
-        const res = await fetch(target, {cache:'no-store', mode:'cors', credentials:'omit'});
+        const res = await fetch(target, {
+          cache:'no-store', mode:'cors', credentials:'omit',
+          headers: { 'accept':'application/json, text/plain;q=0.9, */*;q=0.8' }
+        });
         if (!res.ok) throw new Error('HTTP '+res.status);
         const text = await res.text();
-        return JSON.parse(text);
-      }catch(e){ tried.push(`${target} → ${e.message}`); }
+        const json = parseLooseJson(text);
+        return json;
+      }catch(e){
+        tried.push(`${target} → ${e.message}`);
+      }
     }
     throw new Error('Feed kon niet worden geladen.\n'+tried.join('\n'));
   }
@@ -117,7 +156,8 @@
       applyFilters();
       clearError();
     }catch(e){
-      showError(`<p><strong>Kon feed niet laden.</strong></p><pre>${escapeHtml(e.message)}</pre>`);
+      const snippet = (e && e.message) ? '<pre>'+escapeHtml(String(e.message).slice(0,800))+'</pre>' : '';
+      showError(`<p><strong>Kon feed niet laden.</strong></p>${snippet}<p>Tip: u kunt ook <code>?feed=</code> gebruiken met een eigen (CORS-toegankelijke) JSON-URL.</p>`);
       DATA = [];
       render([]);
     }
