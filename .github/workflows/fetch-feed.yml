@@ -1,4 +1,4 @@
-name: Update feeds (default + realtors) [robust]
+name: Update feeds (default + realtors)
 
 on:
   schedule:
@@ -22,88 +22,77 @@ jobs:
           persist-credentials: true
           fetch-depth: 0
 
-      - name: Show runner and git info
-        shell: bash
-        run: |
-          set -x
-          uname -a || true
-          git --version || true
-          echo "Default branch: ${{ github.event.repository.default_branch }}"
-          git status || true
-          echo "GITHUB_REF: $GITHUB_REF  GITHUB_SHA: $GITHUB_SHA"
-
       - name: Ensure data directory exists
-        shell: bash
-        run: mkdir -p data
+        run: |
+          set -e
+          mkdir -p data
 
       - name: Read realtor IDs (from .github/realtors.txt if present)
         id: ids
-        shell: bash
         run: |
-          set -euo pipefail
-          if [ -f .github/realtors.txt ]; then
-            IDS=$(grep -E '^[a-f0-9-]{36}$' .github/realtors.txt | tr -d '' | tr '
-' ' ' | xargs || true)
+          set -e
+          if [ -f ".github/realtors.txt" ]; then
+            IDS="$(grep -E '^[a-f0-9-]{36}$' .github/realtors.txt | tr -d '\r' | tr '\n' ' ' | xargs || true)"
           else
             IDS="79013c6a-1a81-40b2-9f89-3e7d0354a4f8 b0d5bb0f-a144-43e7-a6d9-112cd4c8c87b"
           fi
-          echo "ids=${IDS}" >> $GITHUB_OUTPUT
+          echo "ids=${IDS}" >> "$GITHUB_OUTPUT"
           echo "Using realtor IDs: ${IDS}"
 
       - name: Fetch default feed (non-fatal)
         id: defaultfeed
-        shell: bash
         run: |
-          set -euo pipefail
+          set -e
           URL="https://venapp.accept.paqt.io/feed"
-          TMP=$(mktemp)
-          if curl -fsSL "$URL" -H "Accept: application/json" -o "${TMP}"; then
-            mv "${TMP}" "data/feed.json"
-            echo "ok=true" >> $GITHUB_OUTPUT
+          TMP="$(mktemp)"
+          if curl -fsSL "$URL" -H "Accept: application/json" -o "$TMP"; then
+            mv "$TMP" "data/feed.json"
+            echo "ok=true" >> "$GITHUB_OUTPUT"
             echo "Default feed written to data/feed.json"
           else
             echo "WARNING: could not fetch $URL" >&2
-            echo "ok=false" >> $GITHUB_OUTPUT
+            echo "ok=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Fetch realtor feeds (non-fatal per ID)
         id: realtorfeeds
-        shell: bash
         run: |
-          set -euo pipefail
+          set -e
           OKCOUNT=0
           for ID in ${{ steps.ids.outputs.ids }}; do
             [ -n "$ID" ] || continue
             URL="https://venapp.accept.paqt.io/realtor/${ID}/feed"
             TARGET="data/realtor-${ID}.json"
-            TMP=$(mktemp)
+            TMP="$(mktemp)"
             echo "Fetching ${URL} ..."
-            if curl -fsSL "${URL}" -H "Accept: application/json" -o "${TMP}"; then
+            if curl -fsSL "$URL" -H "Accept: application/json" -o "$TMP"; then
               OKCOUNT=$((OKCOUNT+1))
-              if [ -f "${TARGET}" ] && cmp -s "${TMP}" "${TARGET}"; then
-                echo "No change for ${TARGET}"
-                rm -f "${TMP}"
+              if [ -f "$TARGET" ] && cmp -s "$TMP" "$TARGET"; then
+                echo "No change for $TARGET"
+                rm -f "$TMP"
               else
-                mv "${TMP}" "${TARGET}"
-                echo "Updated: ${TARGET}"
+                mv "$TMP" "$TARGET"
+                echo "Updated: $TARGET"
               fi
             else
               echo "WARNING: could not fetch ${URL}" >&2
-              rm -f "${TMP}" || true
+              rm -f "$TMP" || true
             fi
           done
-          echo "okcount=${OKCOUNT}" >> $GITHUB_OUTPUT
+          echo "okcount=${OKCOUNT}" >> "$GITHUB_OUTPUT"
           echo "Fetched OK for ${OKCOUNT} realtor IDs"
 
       - name: Always write data/index.json
-        shell: bash
         run: |
-          set -euo pipefail
-          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          set -e
+          NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           DEFAULT=""
-          if [ -f data/feed.json ]; then DEFAULT="data/feed.json"; fi
-          # Collect existing realtor JSON files
-          mapfile -t FILES < <(ls -1 data/realtor-*.json 2>/dev/null || true)
+          if [ -f "data/feed.json" ]; then DEFAULT="data/feed.json"; fi
+          FILES=()
+          for f in data/realtor-*.json; do
+            [ -e "$f" ] || continue
+            FILES+=("$f")
+          done
           {
             echo '{'
             echo '  "generated_at": "'${NOW}'",'
@@ -114,32 +103,31 @@ jobs:
             fi
             echo '  "realtor_files": ['
             for i in "${!FILES[@]}"; do
-              if [ $i -gt 0 ]; then echo ','; fi
+              if [ "$i" -gt 0 ]; then echo ','; fi
               printf '    "%s"' "${FILES[$i]}"
             done
             echo ''
             echo '  ]'
             echo '}'
-          } > data/index.json
+          } > "data/index.json"
           echo "Wrote data/index.json"
 
       - name: Show data dir after run
-        shell: bash
         run: |
-          set -x
+          set -e
           ls -lah data || true
+          echo "---- index.json (first 200 chars) ----"
           head -c 200 data/index.json || true
           echo
 
       - name: Commit & push changes
-        shell: bash
         run: |
-          set -euo pipefail
+          set -e
           if [[ -n "$(git status --porcelain data/)" ]]; then
             git config user.name "github-actions"
             git config user.email "github-actions@github.com"
             git add data/*
-            git commit -m "Update feeds (robust) [skip ci]"
+            git commit -m "Update feeds [skip ci]"
             git push
             echo "Changes committed & pushed."
           else
