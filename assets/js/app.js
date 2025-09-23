@@ -5,9 +5,6 @@
   const $grid = document.getElementById('grid');
   const $stats = document.getElementById('stats');
   const $alert = document.getElementById('alert');
-  const $q = document.getElementById('q');
-  const $city = document.getElementById('city');
-  const $status = document.getElementById('status');
   const $theme = document.getElementById('theme');
 
   // Thema init
@@ -15,7 +12,7 @@
   initThemeFromQueryOrStorage($theme);
   $theme.addEventListener('change', e=> setTheme(e.target.value));
 
-  // --- Querystring: ?feed= of ?realtor= --- prefer local mirrors first
+  // Querystring: ?feed= of ?realtor=
   const params = new URLSearchParams(location.search);
   const realtor = params.get('realtor');
   const feedParam = params.get('feed');
@@ -35,20 +32,11 @@
 
   let DATA = [];
 
-  const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#1f2937"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="#cbd5e1">Geen afbeelding</text></svg>');
+  const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#1f2937"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="#0ea5e9">Geen afbeelding</text></svg>');
 
   function showError(msg){ $alert.innerHTML = msg; $alert.classList.remove('hidden'); }
   function clearError(){ $alert.classList.add('hidden'); $alert.textContent=''; }
   function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c)); }
-
-  function cityFromAddress(addr){
-    if (!addr) return '';
-    const parts = addr.split(',').map(s=>s.trim());
-    if (!parts.length) return '';
-    const tail = parts[parts.length-1];
-    const m = tail.match(/([0-9]{4}\s?[A-Z]{2})\s+(.+)/);
-    return m ? m[2].trim() : tail.trim();
-  }
 
   function parseLooseJson(text){
     const t = String(text || '').trim();
@@ -130,27 +118,6 @@
     $stats.textContent = `${items.length} resultaten`;
   }
 
-  function initFilters(){
-    const cities=[...new Set(DATA.map(x=>x._city).filter(Boolean))].sort();
-    document.getElementById('city').innerHTML = '<option value="">Alle plaatsen</option>' + cities.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
-  }
-
-  function applyFilters(){
-    const qv = ($q.value||'').toLowerCase();
-    const cv = $city.value||'';
-    const sv = $status.value||'';
-    const out = DATA.filter(x=>{
-      const hay = [x.name,x.full_address,x.realtor,x._city].join(' ').toLowerCase();
-      if (qv && !hay.includes(qv)) return false;
-      if (cv && x._city!==cv) return false;
-      if (sv && x.availability!==sv && !(sv==='sold' && x.is_sold)) return false;
-      return true;
-    });
-    render(out);
-  }
-
-  [$q,$city,$status].forEach(el=> el.addEventListener('input', applyFilters));
-
   async function bootstrap(){
     const errors = [];
     for (const url of FEED_CANDIDATES){
@@ -158,8 +125,9 @@
         const raw = await fetchJson(url);
         if (!Array.isArray(raw)) throw new Error('Onverwacht antwoord (geen array)');
         const vis = raw.filter(x => (x.visibility||'public')==='public');
-        DATA = vis.map(x=> ({...x, _city: cityFromAddress(x.full_address)}));
-        initFilters(); applyFilters(); clearError();
+        DATA = vis.map(x=> ({...x}));
+        render(DATA);
+        clearError();
         return;
       }catch(e){
         errors.push(`${url} → ${e.message}`);

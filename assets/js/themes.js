@@ -1,5 +1,5 @@
 
-// /assets/js/themes.js (advanced names + 12 themes)
+// 12 thema's met merknaam en eigen CSS-bestand
 const THEMES = [
   { id: "theme-1",  name: "MVGM",                         href: "assets/css/themes/theme-1.css"  },
   { id: "theme-2",  name: "Zadelhoff Vastgoedadviseurs",  href: "assets/css/themes/theme-2.css"  },

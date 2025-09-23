@@ -4,33 +4,29 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Listingpagina</title>
-  <meta name="description" content="Commercieel vastgoed – listings met filters en themaswitcher." />
+  <meta name="description" content="Commercieel vastgoed – listings met themaswitcher." />
   <link rel="preconnect" href="https://r.jina.ai" crossorigin>
+  <!-- Neutrale basisstijl voor header/balk -->
   <link rel="stylesheet" href="assets/css/base.css">
-  <!-- Actief thema (wisselbaar in UI; default MVGM) -->
+  <!-- Actief thema (toegepast onder .themed) -->
   <link id="themeStylesheet" rel="stylesheet" href="assets/css/themes/theme-1.css">
 </head>
 <body>
-  <header class="header">
+  <!-- NEUTRALE HEADER (licht) -->
+  <header class="header header--neutral">
     <div class="container">
       <h1 class="title">Listingpagina</h1>
-      <p class="subtitle">Filter op plaats en status. Kies een thema.</p>
+      <p class="subtitle">Kies een thema. (Geen zoek-, plaats- of statusfilters)</p>
       <div class="toolbar">
-        <input id="q" class="input" type="text" placeholder="Zoek…" />
-        <select id="city" class="select"><option value="">Alle plaatsen</option></select>
-        <select id="status" class="select">
-          <option value="">Alle status</option>
-          <option value="available">Available</option>
-          <option value="under_bid">Under bid</option>
-          <option value="sold">Sold</option>
-        </select>
-        <select id="theme" class="select"></select>
+        <label class="sr-only" for="theme">Thema</label>
+        <select id="theme" class="select select--neutral"></select>
       </div>
-      <div id="alert" class="alert hidden"></div>
     </div>
   </header>
 
-  <main class="container">
+  <!-- THEMA-GEDEELTE: alles hieronder wordt door thema-variabelen beïnvloed -->
+  <main class="container themed">
+    <div id="alert" class="alert hidden"></div>
     <div id="stats" class="stats"></div>
     <div id="grid" class="grid"></div>
   </main>

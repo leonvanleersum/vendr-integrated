@@ -1,14 +1,17 @@
-# Advanced Themes Bundle (12 thema's)
+# Listingpagina – Neutrale header + alleen themafilter
 
-- `/index.html` — kant-en-klare listingpagina met filters + themaswitcher
-- `/assets/css/base.css` — enhanced basisstijl
-- `/assets/css/themes/theme-1..12.css` — geavanceerde merk-thema's
-- `/assets/js/themes.js` — 12 themanamen en paden
-- `/assets/js/app.js` — feed loader met lokale mirror-voorkeur en JSON-parsing fallback
+- Header is licht/neutraal en bevat alléén de **thema-selector**.
+- Alle themakleuren/styling zijn **gescope't** naar `.themed` onder de header.
+- **Feed fallback**: `?feed=...` → `?realtor=...` → `data/feed.json` (meegeleverd) → externe feed(s) + `r.jina.ai` proxy.
+- Badge linksboven in de afbeelding toont **Available / Under bid / Sold**.
+- **12 geavanceerde thema's** zijn inbegrepen.
 
-## Gebruik
-Publiceer als GitHub Pages of open lokaal. Werk met querystring:
-- `?theme=theme-12`
-- `?feed=https://<user>.github.io/<repo>/data/feed.json`
-- `?realtor=<uuid>` (probeert eerst `data/realtor-<uuid>.json`)
+## Snel starten op GitHub Pages
+1. Upload alle bestanden naar je repo (root) en zet Pages aan.
+2. Open: `https://<user>.github.io/<repo>/` — toont meegeleverde `data/feed.json`.
 
+3. Test thema: `?theme=theme-7`
+4. Test eigen feed: `?feed=https://<user>.github.io/<repo>/data/feed.json`
+5. Test makelaar: `?realtor=<uuid>` (werkt als je in `data/` `realtor-<uuid>.json` plaatst).
+
+*Gegenereerd: 2025-09-23T23:46:19.499561Z*

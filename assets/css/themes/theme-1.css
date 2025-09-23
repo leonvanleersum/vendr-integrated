@@ -1,23 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 
-:root{
+.themed{
   --bg:#0a1424; --panel:#0f1c33; --panel-2:#0c1729;
   --text:#e9f1ff; --muted:#a9b6d6; --border:#1b2b4a;
   --accent:#3ec4ff; --ok:#20c997; --warn:#f59e0b; --sold:#0b1730;
   --radius:16px; --radius-sm:10px;
   --shadow:0 10px 28px rgba(8,20,40,.35);
 }
-body{ font-family:'Montserrat', var(--font-sans); }
-.title{ letter-spacing:.2px }
-.header{ border-bottom: 1px solid color-mix(in oklab, var(--accent) 25%, var(--border)); }
-.card{ border-radius: var(--radius); overflow:hidden; border:1px solid color-mix(in oklab, var(--accent) 20%, var(--border)); box-shadow: var(--shadow); }
-.badge{ letter-spacing:.2px; }
-.badge.warn{ filter:saturate(1.05) }
-.badge.sold{ opacity:.95 }
-.img{ border-bottom-left-radius:0; border-bottom-right-radius:0; }
-.name{ font-weight:600 }
-.addr{ opacity:.9 }
-
-.title{ font-weight:700 }
-.badge{ background:linear-gradient(135deg, var(--accent), #74e9ff); color:#01222c }
-.actions .btn{ border-radius:12px }
+.themed{ font-family:'Montserrat', var(--font-sans); }
+.themed .badge{ background:linear-gradient(135deg, var(--accent), #74e9ff); color:#01222c } .themed .actions .btn{ border-radius:12px }

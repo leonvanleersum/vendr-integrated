@@ -1,0 +1,44 @@
+[
+  {
+    "url": "https://example.com/object/1",
+    "name": "Kantoorruimte Kanaleneiland",
+    "full_address": "Australiëlaan 11, 3526 AB Utrecht",
+    "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format&fit=crop",
+    "description": "Representatieve kantoorruimte nabij A12/A2.",
+    "location": null,
+    "specifications": null,
+    "selling_procedure": null,
+    "realtor": "Commercial Property NL",
+    "is_sold": false,
+    "availability": "available",
+    "visibility": "public"
+  },
+  {
+    "url": "https://example.com/object/2",
+    "name": "Logistiek Warehouse Brabant",
+    "full_address": "Boekelseweg 16, 5469 SZ Erp",
+    "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1200&auto=format&fit=crop",
+    "description": "Warehouse met loading docks en groot buitenterrein.",
+    "location": null,
+    "specifications": null,
+    "selling_procedure": null,
+    "realtor": "Elwin test",
+    "is_sold": false,
+    "availability": "under_bid",
+    "visibility": "public"
+  },
+  {
+    "url": "https://example.com/object/3",
+    "name": "Iconisch Monument in Utrecht",
+    "full_address": "Domplein 1, 3512 JC Utrecht",
+    "image": "https://images.unsplash.com/photo-1484502249930-e1da807099a2?q=80&w=1200&auto=format&fit=crop",
+    "description": "Historisch object met zichtlijn op Dom.",
+    "location": null,
+    "specifications": null,
+    "selling_procedure": null,
+    "realtor": "Commercial Property NL",
+    "is_sold": true,
+    "availability": "sold",
+    "visibility": "public"
+  }
+]
