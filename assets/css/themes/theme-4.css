@@ -1,1 +1,22 @@
-:root{--bg:#0b1020;--panel:#111833;--panel-2:#0e1428;--text:#e7ecff;--muted:#a9b3d9;--border:#1b2444;--accent:#6ea8fe;--ok:#22c55e;--warn:#f59e0b;--sold:#0f172a;} /* theme 4 placeholder */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap');
+
+:root{
+  --bg:#0b1320; --panel:#0e1a2b; --panel-2:#0c1726;
+  --text:#e6f3ff; --muted:#9fc1d9; --border:#183656;
+  --accent:#35c1a1; --ok:#22c55e; --warn:#fbbf24; --sold:#0b2237;
+  --radius:18px; --radius-sm:10px;
+  --shadow:0 14px 32px rgba(0,0,0,.35);
+}
+body{ font-family:'Rubik', var(--font-sans); }
+.title{ letter-spacing:.2px }
+.header{ border-bottom: 1px solid color-mix(in oklab, var(--accent) 25%, var(--border)); }
+.card{ border-radius: var(--radius); overflow:hidden; border:1px solid color-mix(in oklab, var(--accent) 20%, var(--border)); box-shadow: var(--shadow); }
+.badge{ letter-spacing:.2px; }
+.badge.warn{ filter:saturate(1.05) }
+.badge.sold{ opacity:.95 }
+.img{ border-bottom-left-radius:0; border-bottom-right-radius:0; }
+.name{ font-weight:600 }
+.addr{ opacity:.9 }
+
+.badge{ background:#35c1a1; color:#01251f }
+.card{ border-radius:18px }

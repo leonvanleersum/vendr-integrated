@@ -1,7 +1,7 @@
+
 (function(){
   'use strict';
 
-  // --- Elementen ---
   const $grid = document.getElementById('grid');
   const $stats = document.getElementById('stats');
   const $alert = document.getElementById('alert');
@@ -15,17 +15,26 @@
   initThemeFromQueryOrStorage($theme);
   $theme.addEventListener('change', e=> setTheme(e.target.value));
 
-  // --- Querystring: realtor → feed url ---
+  // --- Querystring: ?feed= of ?realtor= --- prefer local mirrors first
   const params = new URLSearchParams(location.search);
   const realtor = params.get('realtor');
   const feedParam = params.get('feed');
-  const DEFAULT_FEED = 'https://venapp.accept.paqt.io/feed';
-  const FEED_URL = feedParam || (realtor ? `https://venapp.accept.paqt.io/realtor/${encodeURIComponent(realtor)}/feed` : DEFAULT_FEED);
 
-  // --- State ---
+  const LOCAL_DEFAULT = new URL('data/feed.json', location.href).href;
+  const LOCAL_REALTOR = realtor ? new URL(`data/realtor-${encodeURIComponent(realtor)}.json`, location.href).href : null;
+
+  const EXTERNAL_DEFAULT = 'https://venapp.accept.paqt.io/feed';
+  const EXTERNAL_REALTOR = realtor ? `https://venapp.accept.paqt.io/realtor/${encodeURIComponent(realtor)}/feed` : null;
+
+  const FEED_CANDIDATES = [];
+  if (feedParam) FEED_CANDIDATES.push(feedParam);
+  if (realtor && LOCAL_REALTOR) FEED_CANDIDATES.push(LOCAL_REALTOR);
+  FEED_CANDIDATES.push(LOCAL_DEFAULT);
+  if (realtor && EXTERNAL_REALTOR) FEED_CANDIDATES.push(EXTERNAL_REALTOR);
+  FEED_CANDIDATES.push(EXTERNAL_DEFAULT);
+
   let DATA = [];
 
-  // --- Utils ---
   const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#1f2937"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="#cbd5e1">Geen afbeelding</text></svg>');
 
   function showError(msg){ $alert.innerHTML = msg; $alert.classList.remove('hidden'); }
@@ -66,6 +75,7 @@
       return [u.href, v.href];
     }catch{ return [url]; }
   }
+
   function candidates(url){
     const out = [];
     for (const base of withFormatVariant(url)){
@@ -84,17 +94,12 @@
     const tried=[];
     for (const target of candidates(url)){
       try{
-        const res = await fetch(target, {
-          cache:'no-store', mode:'cors', credentials:'omit',
-          headers: { 'accept':'application/json, text/plain;q=0.9, */*;q=0.8' }
-        });
+        const res = await fetch(target, {cache:'no-store', mode:'cors', credentials:'omit', headers:{'accept':'application/json, text/plain;q=0.9, */*;q=0.8'}});
         if (!res.ok) throw new Error('HTTP '+res.status);
         const text = await res.text();
         const json = parseLooseJson(text);
         return json;
-      }catch(e){
-        tried.push(`${target} → ${e.message}`);
-      }
+      }catch(e){ tried.push(`${target} → ${e.message}`); }
     }
     throw new Error('Feed kon niet worden geladen.\n'+tried.join('\n'));
   }
@@ -127,7 +132,7 @@
 
   function initFilters(){
     const cities=[...new Set(DATA.map(x=>x._city).filter(Boolean))].sort();
-    $city.innerHTML = '<option value="">Alle plaatsen</option>' + cities.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
+    document.getElementById('city').innerHTML = '<option value="">Alle plaatsen</option>' + cities.map(c=>`<option>${escapeHtml(c)}</option>`).join('');
   }
 
   function applyFilters(){
@@ -147,20 +152,21 @@
   [$q,$city,$status].forEach(el=> el.addEventListener('input', applyFilters));
 
   async function bootstrap(){
-    try{
-      const raw = await fetchJson(FEED_URL);
-      if (!Array.isArray(raw)) throw new Error('Onverwacht antwoord (geen array)');
-      const vis = raw.filter(x => (x.visibility||'public')==='public');
-      DATA = vis.map(x=> ({...x, _city: cityFromAddress(x.full_address)}));
-      initFilters();
-      applyFilters();
-      clearError();
-    }catch(e){
-      const snippet = (e && e.message) ? '<pre>'+escapeHtml(String(e.message).slice(0,800))+'</pre>' : '';
-      showError(`<p><strong>Kon feed niet laden.</strong></p>${snippet}<p>Tip: u kunt ook <code>?feed=</code> gebruiken met een eigen (CORS-toegankelijke) JSON-URL.</p>`);
-      DATA = [];
-      render([]);
+    const errors = [];
+    for (const url of FEED_CANDIDATES){
+      try{
+        const raw = await fetchJson(url);
+        if (!Array.isArray(raw)) throw new Error('Onverwacht antwoord (geen array)');
+        const vis = raw.filter(x => (x.visibility||'public')==='public');
+        DATA = vis.map(x=> ({...x, _city: cityFromAddress(x.full_address)}));
+        initFilters(); applyFilters(); clearError();
+        return;
+      }catch(e){
+        errors.push(`${url} → ${e.message}`);
+      }
     }
+    showError(`<p><strong>Kon feed niet laden.</strong></p><pre>${escapeHtml(errors.join('\n'))}</pre><p>Tip: gebruik <code>?feed=</code> met je eigen JSON op GitHub Pages.</p>`);
+    DATA = []; render([]);
   }
 
   bootstrap();

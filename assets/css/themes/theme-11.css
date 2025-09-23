@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700&display=swap');
 
 :root{
-  --bg:#0f1216; --panel:#151a21; --panel-2:#12171d;
-  --text:#f1f5f9; --muted:#9aa6b2; --border:#222b36;
-  --accent:#ff7a1a; --ok:#22c55e; --warn:#fb923c; --sold:#0f172a;
+  --bg:#f5fbf9; --panel:#ffffff; --panel-2:#ffffff;
+  --text:#0b1220; --muted:#486063; --border:#e3efe9;
+  --accent:#00a896; --ok:#16a34a; --warn:#d97706; --sold:#0f172a;
   --radius:14px; --radius-sm:10px;
-  --shadow:0 10px 24px rgba(10,10,10,.35);
+  --shadow:0 10px 22px rgba(0,0,0,.08);
 }
-body{ font-family:'Inter', var(--font-sans); }
+body{ font-family:'Mulish', var(--font-sans); }
 .title{ letter-spacing:.2px }
 .header{ border-bottom: 1px solid color-mix(in oklab, var(--accent) 25%, var(--border)); }
 .card{ border-radius: var(--radius); overflow:hidden; border:1px solid color-mix(in oklab, var(--accent) 20%, var(--border)); box-shadow: var(--shadow); }
@@ -18,5 +18,6 @@ body{ font-family:'Inter', var(--font-sans); }
 .name{ font-weight:600 }
 .addr{ opacity:.9 }
 
-.badge{ background:#111827;color:#fff;border:1px solid #ff7a1a }
-.btn{ border-radius:8px }
+body{ color-scheme:light }
+.badge{ background:#00a896;color:#00221f }
+.btn{ border-radius:999px }
