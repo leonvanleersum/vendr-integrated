@@ -1,2 +1,3 @@
-# vendr-integrated
-Embed your Vendr listing within your corporate website
+# Listingpagina (GitHub Pages)
+
+Zie instructies...
