@@ -89,9 +89,12 @@
     text-decoration: none;
     color: #012d55;
     background: #B6D6DB;
-    border: 0px solid
+    border: 1px solid
  color-mix(in srgb, var(--accent) 60%, #000000);
 }
 .themed .actions .btn:hover {
   background: color-mix(in srgb, var(--accent) 85%, #064c6f);
+  color: #012d55;
+  background: #ffffff;
+  border: 1px solid
 }
