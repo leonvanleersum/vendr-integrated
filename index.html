@@ -1,4 +1,4 @@
-dr<!doctype html>
+<!doctype html>
 <html lang="nl">
 <head>
   <meta charset="utf-8" />
@@ -6,17 +6,15 @@ dr<!doctype html>
   <title>Listingpagina</title>
   <meta name="description" content="Commercieel vastgoed – listings met themaswitcher." />
   <link rel="preconnect" href="https://r.jina.ai" crossorigin>
-  <!-- Neutrale basisstijl voor header/balk -->
   <link rel="stylesheet" href="assets/css/base.css">
-  <!-- Actief thema (toegepast onder .themed) -->
   <link id="themeStylesheet" rel="stylesheet" href="assets/css/themes/theme-1.css">
 </head>
 <body>
-  <!-- NEUTRALE HEADER (licht) -->
+  <!-- NEUTRALE HEADER -->
   <header class="header header--neutral">
     <div class="container">
       <h1 class="title">Listingpagina</h1>
-      <p class="subtitle">Kies een thema.</p>
+      <p class="subtitle">Kies een thema. (Geen zoek-, plaats- of statusfilters)</p>
       <div class="toolbar">
         <label class="sr-only" for="theme">Thema</label>
         <select id="theme" class="select select--neutral"></select>
@@ -24,10 +22,16 @@ dr<!doctype html>
     </div>
   </header>
 
-  <!-- THEMA-GEDEELTE: alles hieronder wordt door thema-variabelen beïnvloed -->
+  <!-- THEMA-GEDEELTE -->
   <main class="container themed">
     <div id="alert" class="alert hidden"></div>
     <div id="stats" class="stats"></div>
+
+    <div id="realtor-section" class="realtor-section hidden">
+      <div class="realtor-title">Beschikbare makelaarsfeeds</div>
+      <div id="realtor-links" class="realtor-links"></div>
+    </div>
+
     <div id="grid" class="grid"></div>
   </main>
 
@@ -43,7 +47,7 @@ dr<!doctype html>
         <p class="meta"></p>
       </div>
       <div class="actions">
-        <a class="btn" target="_blank" rel="noopener">Bekijk op Vendr</a>
+        <a class="btn" target="_blank" rel="noopener">Bekijk</a>
       </div>
     </article>
   </template>

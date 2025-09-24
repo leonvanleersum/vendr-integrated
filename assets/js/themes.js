@@ -11,8 +11,8 @@ const THEMES = [
   { id: "theme-8",  name: "Hans Janssen Zakelijk",        href: "assets/css/themes/theme-8.css"  },
   { id: "theme-9",  name: "NDRP Real Estate",             href: "assets/css/themes/theme-9.css"  },
   { id: "theme-10", name: "Brantjes",                     href: "assets/css/themes/theme-10.css" },
-  { id: "theme-11", name: "Woonbron",                     href: "assets/css/themes/theme-11.css" },
-  { id: "theme-12", name: "JLL",                          href: "assets/css/themes/theme-12.css" }
+  { id: "theme-11", name: "Woonbron",                     href: "assets/css/themes/theme-11.css"  },
+  { id: "theme-12", name: "JLL",                          href: "assets/css/themes/theme-12.css"  }
 ];
 
 function populateThemeSelect(selectEl){

@@ -6,13 +6,15 @@
   const $stats = document.getElementById('stats');
   const $alert = document.getElementById('alert');
   const $theme = document.getElementById('theme');
+  const $reSection = document.getElementById('realtor-section');
+  const $reLinks = document.getElementById('realtor-links');
 
   // Thema init
   populateThemeSelect($theme);
   initThemeFromQueryOrStorage($theme);
   $theme.addEventListener('change', e=> setTheme(e.target.value));
 
-  // Querystring: ?feed= of ?realtor=
+  // Querystring
   const params = new URLSearchParams(location.search);
   const realtor = params.get('realtor');
   const feedParam = params.get('feed');
@@ -20,7 +22,7 @@
   const LOCAL_DEFAULT = new URL('data/feed.json', location.href).href;
   const LOCAL_REALTOR = realtor ? new URL(`data/realtor-${encodeURIComponent(realtor)}.json`, location.href).href : null;
 
-  // externe feed = vendr.nl
+  // Externe feed: vendr.nl
   const EXTERNAL_DEFAULT = 'https://vendr.nl/feed';
   const EXTERNAL_REALTOR = realtor ? `https://vendr.nl/realtor/${encodeURIComponent(realtor)}/feed` : null;
 
@@ -31,13 +33,11 @@
   if (realtor && EXTERNAL_REALTOR) FEED_CANDIDATES.push(EXTERNAL_REALTOR);
   FEED_CANDIDATES.push(EXTERNAL_DEFAULT);
 
-  let DATA = [];
-
-  const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#1f2937"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="16" fill="#0ea5e9">Geen afbeelding</text></svg>');
+  const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 400 300\"><rect width=\"400\" height=\"300\" fill=\"#1f2937\"/><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" font-family=\"Arial\" font-size=\"16\" fill=\"#0ea5e9\">Geen afbeelding</text></svg>');
 
   function showError(msg){ $alert.innerHTML = msg; $alert.classList.remove('hidden'); }
   function clearError(){ $alert.classList.add('hidden'); $alert.textContent=''; }
-  function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c)); }
+  function escapeHtml(s){ return String(s).replace(/[&<>\"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#039;'}[c]||c)); }
 
   function parseLooseJson(text){
     const t = String(text || '').trim();
@@ -90,7 +90,7 @@
         return json;
       }catch(e){ tried.push(`${target} → ${e.message}`); }
     }
-    throw new Error('Feed kon niet worden geladen.\\n'+tried.join('\\n'));
+    throw new Error('Feed kon niet worden geladen.\n'+tried.join('\n'));
   }
 
   function statusBadge(av, sold){
@@ -119,15 +119,42 @@
     $stats.textContent = `${items.length} resultaten`;
   }
 
+  async function buildRealtorLinks(){
+    try{
+      const url = new URL('data/index.json', location.href).href;
+      const data = await fetchJson(url);
+      if (!data || !Array.isArray(data.realtor_files)) return;
+      const ids = data.realtor_files
+        .map(p => (p.match(/realtor-([A-Fa-f0-9-]{36})\\.json$/)||[])[1])
+        .filter(Boolean);
+      if (ids.length === 0) return;
+      $reLinks.innerHTML = ids.map(id => {
+        const u = new URL(location.href);
+        u.searchParams.set('realtor', id);
+        return `<a href="${u.toString()}">${id}</a>`;
+      }).join('');
+      const realtor = new URLSearchParams(location.search).get('realtor');
+      if (realtor){
+        [...$reLinks.querySelectorAll('a')].forEach(a=>{
+          if (a.href.includes(realtor)) a.classList.add('active');
+        });
+      }
+      $reSection.classList.remove('hidden');
+    }catch(e){
+      console.warn('Kon /data/index.json niet laden:', e);
+    }
+  }
+
   async function bootstrap(){
+    await buildRealtorLinks();
+
     const errors = [];
     for (const url of FEED_CANDIDATES){
       try{
         const raw = await fetchJson(url);
         if (!Array.isArray(raw)) throw new Error('Onverwacht antwoord (geen array)');
         const vis = raw.filter(x => (x.visibility||'public')==='public');
-        const DATA = vis.map(x=> ({...x}));
-        render(DATA);
+        render(vis.map(x=> ({...x})));
         clearError();
         return;
       }catch(e){
