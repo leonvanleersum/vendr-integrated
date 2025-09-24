@@ -84,12 +84,14 @@
   border-top:1px solid var(--border);
 }
 .themed .actions .btn {
-  padding:10px 14px;
-  border-radius:0px;
-  text-decoration:none;
-  color:#5D3D69;
-  background: var(--accent);
-  border: 2px solid color-mix(in srgb, var(--accent) 60%, #000000);
+    padding: 10px 14px;
+    border-radius: 18px;
+    text-decoration: none;
+    font-variant: all-small-caps;
+    color: #012d55;
+    background: #B6D6DB;
+    border: 2px solid
+ color-mix(in srgb, var(--accent) 60%, #000000);
 }
 .themed .actions .btn:hover {
   background: color-mix(in srgb, var(--accent) 85%, #064c6f);
