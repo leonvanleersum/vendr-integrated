@@ -34,7 +34,7 @@ jobs:
           if [ -f ".github/realtors.txt" ]; then
             IDS="$(grep -E '^[a-f0-9-]{36}$' .github/realtors.txt | tr -d '\r' | tr '\n' ' ' | xargs || true)"
           else
-            IDS="79013c6a-1a81-40b2-9f89-3e7d0354a4f8 b0d5bb0f-a144-43e7-a6d9-112cd4c8c87b"
+            IDS="389d4412-0814-4f11-b01c-d5a4b0355e50 db92a0e3-1ee8-4c9e-851c-3b54864ff0d0 146f9e18-0f8d-4301-a43e-9ca578c43692 bc163571-2dd9-405f-9bc0-19047f382f62 514efdd1-e8b7-4ca7-975b-22cc4b187f81"
           fi
           echo "ids=${IDS}" >> "$GITHUB_OUTPUT"
           echo "Using realtor IDs: ${IDS}"
