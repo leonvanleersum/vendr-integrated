@@ -1,11 +1,4 @@
 
-/*
-  Basis:
-  - Neutrale lichte header/balk (onafhankelijk van thema)
-  - Themagebied onder .themed gebruikt CSS-variabelen (door thema's overschreven)
-*/
-
-/* ======= NEUTRALE BASIS (header/balk) ======= */
 :root{
   --radius:14px; --radius-sm:10px; --shadow:0 8px 24px rgba(0,0,0,.10);
   --font-sans: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
@@ -25,8 +18,6 @@ body{margin:0;background:#f3f4f6;color:#111827;font:15px/1.55 var(--font-sans)}
 .alert{border:1px solid #7f1d1d;background:#450a0a;color:#fecaca;border-radius:var(--radius-sm);padding:10px 12px;margin:12px 0}
 .hidden{display:none}
 
-/* ======= THEMA-GEDEELTE (onder .themed) ======= */
-/* Default variabelen; kunnen overschreven worden door /assets/css/themes/theme-*.css */
 .themed{
   --bg:#0b0c0e; --panel:#121417; --panel-2:#171a1f; --text:#e6eaf0; --muted:#9aa3b2;
   --border:#232830; --accent:#6ea8fe; --ok:#22c55e; --warn:#f59e0b; --sold:#0f172a;
@@ -50,5 +41,4 @@ body{margin:0;background:#f3f4f6;color:#111827;font:15px/1.55 var(--font-sans)}
 .actions .btn{border-radius:999px;padding:10px 14px;background: color-mix(in oklab, var(--accent) 16%, var(--panel)); border:1px solid color-mix(in oklab, var(--accent) 35%, var(--border)); color:var(--text);text-decoration:none}
 .actions .btn:hover{ box-shadow:0 6px 18px color-mix(in oklab, var(--accent) 30%, transparent); }
 
-/* Utility */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

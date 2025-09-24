@@ -5,7 +5,7 @@
   --text:#0b1220; --muted:#486063; --border:#e3efe9;
   --accent:#00a896; --ok:#16a34a; --warn:#d97706; --sold:#0f172a;
   --radius:14px; --radius-sm:10px;
-  --shadow:0 10px 22px rgba(0,0,0,.08);
+  --shadow:0 8px 24px rgba(0,0,0,.22);
 }
 .themed{ font-family:'Mulish', var(--font-sans); }
-body{ color-scheme:light } .themed .badge{ background:#00a896;color:#00221f } .themed .actions .btn{ border-radius:999px }
+body{ color-scheme:light }

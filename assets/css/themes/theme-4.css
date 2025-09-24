@@ -4,8 +4,8 @@
   --bg:#0b1320; --panel:#0e1a2b; --panel-2:#0c1726;
   --text:#e6f3ff; --muted:#9fc1d9; --border:#183656;
   --accent:#35c1a1; --ok:#22c55e; --warn:#fbbf24; --sold:#0b2237;
-  --radius:18px; --radius-sm:10px;
-  --shadow:0 14px 32px rgba(0,0,0,.35);
+  --radius:14px; --radius-sm:10px;
+  --shadow:0 8px 24px rgba(0,0,0,.22);
 }
 .themed{ font-family:'Rubik', var(--font-sans); }
-.themed .badge{ background:#35c1a1; color:#01251f } .themed .card{ border-radius:18px }
+

@@ -20,8 +20,9 @@
   const LOCAL_DEFAULT = new URL('data/feed.json', location.href).href;
   const LOCAL_REALTOR = realtor ? new URL(`data/realtor-${encodeURIComponent(realtor)}.json`, location.href).href : null;
 
-  const EXTERNAL_DEFAULT = 'https://venapp.accept.paqt.io/feed';
-  const EXTERNAL_REALTOR = realtor ? `https://venapp.accept.paqt.io/realtor/${encodeURIComponent(realtor)}/feed` : null;
+  // externe feed = vendr.nl
+  const EXTERNAL_DEFAULT = 'https://vendr.nl/feed';
+  const EXTERNAL_REALTOR = realtor ? `https://vendr.nl/realtor/${encodeURIComponent(realtor)}/feed` : null;
 
   const FEED_CANDIDATES = [];
   if (feedParam) FEED_CANDIDATES.push(feedParam);
@@ -89,7 +90,7 @@
         return json;
       }catch(e){ tried.push(`${target} → ${e.message}`); }
     }
-    throw new Error('Feed kon niet worden geladen.\n'+tried.join('\n'));
+    throw new Error('Feed kon niet worden geladen.\\n'+tried.join('\\n'));
   }
 
   function statusBadge(av, sold){
@@ -125,7 +126,7 @@
         const raw = await fetchJson(url);
         if (!Array.isArray(raw)) throw new Error('Onverwacht antwoord (geen array)');
         const vis = raw.filter(x => (x.visibility||'public')==='public');
-        DATA = vis.map(x=> ({...x}));
+        const DATA = vis.map(x=> ({...x}));
         render(DATA);
         clearError();
         return;
@@ -133,8 +134,8 @@
         errors.push(`${url} → ${e.message}`);
       }
     }
-    showError(`<p><strong>Kon feed niet laden.</strong></p><pre>${escapeHtml(errors.join('\n'))}</pre><p>Tip: gebruik <code>?feed=</code> met je eigen JSON op GitHub Pages.</p>`);
-    DATA = []; render([]);
+    showError(`<p><strong>Kon feed niet laden.</strong></p><pre>${escapeHtml(errors.join('\\n'))}</pre><p>Tip: gebruik <code>?feed=</code> met je eigen JSON op GitHub Pages.</p>`);
+    render([]);
   }
 
   bootstrap();

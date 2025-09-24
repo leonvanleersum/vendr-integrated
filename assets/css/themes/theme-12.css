@@ -4,8 +4,8 @@
   --bg:#f7f7f8; --panel:#ffffff; --panel-2:#ffffff;
   --text:#111827; --muted:#6b7280; --border:#e5e7eb;
   --accent:#e31837; --ok:#16a34a; --warn:#d97706; --sold:#0f172a;
-  --radius:10px; --radius-sm:10px;
-  --shadow:0 8px 20px rgba(0,0,0,.08);
+  --radius:14px; --radius-sm:10px;
+  --shadow:0 8px 24px rgba(0,0,0,.22);
 }
 .themed{ font-family:'Work Sans', var(--font-sans); }
-body{ color-scheme:light } .themed .badge{ background:#e31837;color:#fff; text-transform:uppercase; letter-spacing:.4px } .themed .card{ border-width:2px }
+body{ color-scheme:light }
