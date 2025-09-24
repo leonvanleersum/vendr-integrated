@@ -43,7 +43,7 @@ jobs:
         id: defaultfeed
         run: |
           set -e
-          URL="https://venapp.accept.paqt.io/feed"
+          URL="https://vendr.nl/feed"
           TMP="$(mktemp)"
           if curl -fsSL "$URL" -H "Accept: application/json" -o "$TMP"; then
             mv "$TMP" "data/feed.json"
@@ -61,7 +61,7 @@ jobs:
           OKCOUNT=0
           for ID in ${{ steps.ids.outputs.ids }}; do
             [ -n "$ID" ] || continue
-            URL="https://venapp.accept.paqt.io/realtor/${ID}/feed"
+            URL="https://vendr.nl/realtor/${ID}/feed"
             TARGET="data/realtor-${ID}.json"
             TMP="$(mktemp)"
             echo "Fetching ${URL} ..."
