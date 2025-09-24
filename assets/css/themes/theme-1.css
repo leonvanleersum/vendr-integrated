@@ -95,6 +95,6 @@
 .themed .actions .btn:hover {
   background: color-mix(in srgb, var(--accent) 85%, #064c6f);
   color: #012d55;
-  background: #ffffff;
-  border: 1px solid
+  background: #B6D6DB;
+  border: 2px solid
 }
