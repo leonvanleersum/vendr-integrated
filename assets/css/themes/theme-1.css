@@ -1,11 +1,124 @@
+/* theme-1.css – MVGM stijl (Flatsome-achtig, licht) */
+/* Bron kleuren: MVGM merkblauw #007CBA. Fonts: Montserrat voor koppen/knoppen. */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 
+/* Palet en basisvariabelen – alleen actief onder .themed */
 .themed{
-  --bg:#0a1424; --panel:#0f1c33; --panel-2:#0c1729;
-  --text:#e9f1ff; --muted:#a9b6d6; --border:#1b2b4a;
-  --accent:#3ec4ff; --ok:#20c997; --warn:#f59e0b; --sold:#0b1730;
-  --radius:16px; --radius-sm:10px;
-  --shadow:0 10px 28px rgba(8,20,40,.35);
+  /* Licht canvas, witte kaarten, donkergrijze tekst, MVGM-blauw als accent */
+  --bg:#f6f9fc;            /* lichtgrijs/blauwige achtergrond */
+  --panel:#ffffff;         /* kaartpanelen wit */
+  --panel-2:#ffffff;       /* mediabackground */
+  --text:#0f172a;          /* primaire tekst (zeer donkergrijs) */
+  --muted:#495873;         /* secundaire tekst */
+  --border:#e6eef5;        /* subtiele randen */
+  --accent:#007CBA;        /* MVGM primair blauw */
+  --ok:#22c55e;            /* groen voor available (neutraal laten) */
+  --warn:#f59e0b;          /* oranje voor under bid */
+  --sold:#111827;          /* donker badge voor sold */
+  --radius:12px;
+  --radius-sm:10px;
+  --shadow:0 10px 24px rgba(14,45,80,.10);
 }
-.themed{ font-family:'Montserrat', var(--font-sans); }
-.themed .badge{ background:linear-gradient(135deg, var(--accent), #74e9ff); color:#01222c } .themed .actions .btn{ border-radius:12px }
+
+/* Typografie en algemene look */
+.themed{
+  font-family: 'Montserrat', var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* Kaarten: clean, wit, subtiele rand, zachte schaduw, lichte hover */
+.themed .card{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.themed .card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(14,45,80,.14);
+  border-color: color-mix(in oklab, var(--accent) 12%, var(--border));
+}
+
+/* Media-gebied met vaste aspect-ratio, geen donkere overlay in dit lichte thema */
+.themed .media{
+  position: relative;
+  background: #f2f6fb;
+  padding-top: 64%;
+  overflow: hidden;
+}
+.themed .img{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .25s ease;
+}
+.themed .card:hover .img{ transform: scale(1.03); }
+
+/* Badges (links boven) – pillen met merkaccent */
+.themed .badge{
+  position:absolute; left:12px; top:12px;
+  display:inline-block;
+  padding:6px 12px;
+  font-size:12px; font-weight:700; letter-spacing:.2px;
+  border-radius:999px;
+  background: var(--accent);
+  color:#fff;
+  box-shadow: 0 2px 10px rgba(0,124,186,.27);
+  border: 1px solid color-mix(in oklab, var(--accent) 40%, #ffffff);
+}
+.themed .badge.warn{ background: var(--warn); color:#2b1710; box-shadow:0 2px 10px rgba(245,158,11,.25); }
+.themed .badge.sold{ background: var(--sold); color:#fff; box-shadow:0 2px 10px rgba(17,24,39,.25); }
+
+/* Tekst op kaarten */
+.themed .body{ padding: 16px 18px; }
+.themed .name{
+  margin:0 0 6px;
+  font-size: 18px; line-height:1.3;
+  color: #0b1220;
+  font-weight: 700;
+}
+.themed .addr{ margin:0; color: var(--muted); }
+.themed .meta{ margin:8px 0 0; color: var(--muted); font-size:12px }
+
+/* Knoppen – gevuld met merkblauw, lichte radius */
+.themed .actions{
+  display:flex; gap:10px;
+  padding: 12px 18px;
+  border-top:1px solid var(--border);
+}
+.themed .actions .btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:10px 14px;
+  border-radius:10px;
+  text-decoration:none;
+  color:#fff;
+  background: var(--accent);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, #ffffff);
+  box-shadow: 0 6px 18px rgba(0,124,186,.18);
+  transition: transform .06s ease, box-shadow .2s ease, background-color .15s ease;
+}
+.themed .actions .btn:hover{
+  background: color-mix(in oklab, var(--accent) 88%, #064c6f);
+  box-shadow: 0 10px 24px rgba(0,124,186,.24);
+}
+.themed .actions .btn:active{ transform: translateY(1px); }
+
+/* Grid-afstanden en statistiek-kopje in MVGM-stijl */
+.themed .stats{
+  margin: 16px 0 12px;
+  color: #334155;
+  font-weight: 600;
+}
+
+/* Links in content (indien zichtbaar) */
+.themed a{ color: var(--accent); }
+.themed a:hover{ color: color-mix(in oklab, var(--accent) 85%, #0a3b5e); }
+
+/* Optioneel: dunne rand rondom afbeelding voor strakkere feel op wit */
+.themed .media::after{
+  content:''; position:absolute; inset:0;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.03);
+  pointer-events:none;
+}
