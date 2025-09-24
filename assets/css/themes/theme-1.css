@@ -84,7 +84,7 @@
   text-decoration:none;
   color:#5D3D69;
   background: var(--accent);
-  border: 0px solid color-mix(in srgb, var(--accent) 60%, #ffffff);
+  border: 2px solid color-mix(in srgb, var(--accent) 60%, #000000);
 }
 .themed .actions .btn:hover {
   background: color-mix(in srgb, var(--accent) 85%, #064c6f);
