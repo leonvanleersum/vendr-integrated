@@ -12,7 +12,7 @@
   --ok:#22c55e;
   --warn:#f59e0b;
   --sold:#5D3D69;
-  --radius:18px;
+  --radius:24px;
   --shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
@@ -64,8 +64,8 @@
     display: inline-block;
     padding: 6px 10px;
     font-size: 16px;
-    font-family: 'Roboto Slab';
-    font-weight: 700;
+    font-family: 'Roboto Slab', sans-serif;
+    font-weight: 900;
     border-radius: 0px;
     background: #5D3D69;
     color: #fff;
@@ -87,10 +87,9 @@
     padding: 10px 14px;
     border-radius: 18px;
     text-decoration: none;
-    font-variant: all-small-caps;
     color: #012d55;
     background: #B6D6DB;
-    border: 2px solid
+    border: 0px solid
  color-mix(in srgb, var(--accent) 60%, #000000);
 }
 .themed .actions .btn:hover {
