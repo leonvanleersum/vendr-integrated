@@ -24,40 +24,58 @@ jobs:
 
       - name: Ensure data directory exists
         run: |
-          set -e
+          set -euo pipefail
           mkdir -p data
 
       - name: Read realtor IDs (from .github/realtors.txt if present)
         id: ids
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           if [ -f ".github/realtors.txt" ]; then
-            IDS="$(grep -E '^[a-f0-9-]{36}$' .github/realtors.txt | tr -d '\r' | tr '\n' ' ' | xargs || true)"
+            IDS="$(grep -E '^[A-Fa-f0-9-]{36}$' .github/realtors.txt | tr -d '\r' | tr '\n' ' ' | xargs || true)"
           else
             IDS="389d4412-0814-4f11-b01c-d5a4b0355e50 db92a0e3-1ee8-4c9e-851c-3b54864ff0d0 146f9e18-0f8d-4301-a43e-9ca578c43692 bc163571-2dd9-405f-9bc0-19047f382f62 514efdd1-e8b7-4ca7-975b-22cc4b187f81"
           fi
           echo "ids=${IDS}" >> "$GITHUB_OUTPUT"
           echo "Using realtor IDs: ${IDS}"
 
-      - name: Fetch default feed (non-fatal)
+      - name: Fetch default feed (non-fatal, validate JSON, no-op if unchanged)
         id: defaultfeed
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           URL="https://vendr.nl/feed"
           TMP="$(mktemp)"
-          if curl -fsSL "$URL" -H "Accept: application/json" -o "$TMP"; then
-            mv "$TMP" "data/feed.json"
-            echo "ok=true" >> "$GITHUB_OUTPUT"
-            echo "Default feed written to data/feed.json"
+          echo "Fetching ${URL} ..."
+          if curl -fsS --max-time 25 --retry 3 --retry-delay 2 \
+               -H "Accept: application/json" "$URL" -o "$TMP"; then
+            if jq -e . "$TMP" >/dev/null 2>&1; then
+              if [ -f "data/feed.json" ] && cmp -s "$TMP" "data/feed.json"; then
+                echo "ok=true" >> "$GITHUB_OUTPUT"
+                echo "No change for data/feed.json"
+                rm -f "$TMP"
+              else
+                mv "$TMP" "data/feed.json"
+                echo "ok=true" >> "$GITHUB_OUTPUT"
+                echo "Updated data/feed.json"
+              fi
+            else
+              echo "WARNING: invalid JSON from ${URL}" >&2
+              echo "ok=false" >> "$GITHUB_OUTPUT"
+              rm -f "$TMP" || true
+            fi
           else
-            echo "WARNING: could not fetch $URL" >&2
+            echo "WARNING: could not fetch ${URL}" >&2
             echo "ok=false" >> "$GITHUB_OUTPUT"
+            rm -f "$TMP" || true
           fi
 
-      - name: Fetch realtor feeds (non-fatal per ID)
+      - name: Fetch realtor feeds (non-fatal per ID, validate JSON, no-op if unchanged)
         id: realtorfeeds
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           OKCOUNT=0
           for ID in ${{ steps.ids.outputs.ids }}; do
             [ -n "$ID" ] || continue
@@ -65,14 +83,20 @@ jobs:
             TARGET="data/realtor-${ID}.json"
             TMP="$(mktemp)"
             echo "Fetching ${URL} ..."
-            if curl -fsSL "$URL" -H "Accept: application/json" -o "$TMP"; then
-              OKCOUNT=$((OKCOUNT+1))
-              if [ -f "$TARGET" ] && cmp -s "$TMP" "$TARGET"; then
-                echo "No change for $TARGET"
-                rm -f "$TMP"
+            if curl -fsS --max-time 25 --retry 3 --retry-delay 2 \
+                 -H "Accept: application/json" "$URL" -o "$TMP"; then
+              if jq -e . "$TMP" >/dev/null 2>&1; then
+                OKCOUNT=$((OKCOUNT+1))
+                if [ -f "$TARGET" ] && cmp -s "$TMP" "$TARGET"; then
+                  echo "No change for $TARGET"
+                  rm -f "$TMP"
+                else
+                  mv "$TMP" "$TARGET"
+                  echo "Updated: $TARGET"
+                fi
               else
-                mv "$TMP" "$TARGET"
-                echo "Updated: $TARGET"
+                echo "WARNING: invalid JSON from ${URL}" >&2
+                rm -f "$TMP" || true
               fi
             else
               echo "WARNING: could not fetch ${URL}" >&2
@@ -83,8 +107,9 @@ jobs:
           echo "Fetched OK for ${OKCOUNT} realtor IDs"
 
       - name: Always write data/index.json
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           NOW="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           DEFAULT=""
           if [ -f "data/feed.json" ]; then DEFAULT="data/feed.json"; fi
@@ -93,6 +118,9 @@ jobs:
             [ -e "$f" ] || continue
             FILES+=("$f")
           done
+          # Sorteer voor deterministische output
+          IFS=$'\n' FILES=($(sort <<<"${FILES[*]}"))
+          unset IFS
           {
             echo '{'
             echo '  "generated_at": "'${NOW}'",'
@@ -106,23 +134,25 @@ jobs:
               if [ "$i" -gt 0 ]; then echo ','; fi
               printf '    "%s"' "${FILES[$i]}"
             done
-            echo ''
+            echo
             echo '  ]'
             echo '}'
           } > "data/index.json"
           echo "Wrote data/index.json"
 
       - name: Show data dir after run
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           ls -lah data || true
           echo "---- index.json (first 200 chars) ----"
           head -c 200 data/index.json || true
           echo
 
       - name: Commit & push changes
+        shell: bash
         run: |
-          set -e
+          set -euo pipefail
           if [[ -n "$(git status --porcelain data/)" ]]; then
             git config user.name "github-actions"
             git config user.email "github-actions@github.com"
