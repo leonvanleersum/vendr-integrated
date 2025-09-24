@@ -3,9 +3,9 @@
 .themed{
   --bg:#ffffff; --panel:#E7F5EF; --panel-2:#E7F5EF;
   --text:#f1f5f9; --muted:#9aa6b2; --border:#ffffff;
-  --accent:#ff7a1a; --ok:#22c55e; --warn:#fb923c; --sold:#2DA276;
+  --accent:#01503D; --ok:#22c55e; --warn:#fb923c; --sold:#2DA276;
   --radius:0px; --radius-sm:0px;
   --shadow:0;
 }
 .themed{ font-family:'Inter', var(--font-sans); }
-.themed .badge{ background:#169867C7;color:#fff;border:1px solid #ff7a1a } .themed .btn{ border-radius:8px }
+.themed .badge{ background:#169867C7;color:#fff;border:0px solid #ff7a1a; radius:0px } .themed .btn{ border-radius:0px }
