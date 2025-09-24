@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 .themed{
-  --bg:#ffffff; --panel:#EFF7F3; --panel-2:#EFF7F3;
+  --bg:#ffffff; --panel:#E7F5EF; --panel-2:#E7F5EF;
   --text:#f1f5f9; --muted:#9aa6b2; --border:#ffffff;
   --accent:#ff7a1a; --ok:#22c55e; --warn:#fb923c; --sold:#2DA276;
   --radius:0px; --radius-sm:0px;
