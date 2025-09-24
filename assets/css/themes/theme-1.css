@@ -1,41 +1,33 @@
-/* theme-1.css – MVGM stijl met jouw aanpassingen */
-/* Headers in Roboto Slab, card background #B6D6DB, ribbon #5D3D69 */
+/* theme-1.css – MVGM stijl */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 
-/* Basisvariabelen voor dit thema */
 .themed {
-  --bg:#f6f9fc;              /* licht canvas */
-  --panel:#B6D6DB;           /* kaart achtergrondkleur */
-  --panel-2:#ffffff;         /* media fallback */
-  --text:#0f172a;            /* primaire tekst */
-  --muted:#495873;           /* secundaire tekst */
-  --border:#d5e5e9;          /* subtiele rand */
-  --accent:#007CBA;          /* merkblauw accent (voor buttons/links) */
+  --bg:#f6f9fc;
+  --panel:#B6D6DB;       /* cardkleur */
+  --panel-2:#ffffff;
+  --text:#0f172a;
+  --muted:#495873;
+  --border:#d5e5e9;
+  --accent:#007CBA;
   --ok:#22c55e;
   --warn:#f59e0b;
   --sold:#111827;
-  --ribbon:#5D3D69;          /* ribbon kleur */
   --radius:12px;
-  --radius-sm:10px;
   --shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
 .themed {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Arial', sans-serif;
   color: var(--text);
   background: var(--bg);
 }
 
-/* Headers specifiek in Roboto Slab */
-.themed h1,
-.themed h2,
+/* Headers h3 in Roboto Slab, kleur #012D55 */
 .themed h3,
-.themed h4,
 .themed .name {
   font-family: 'Roboto Slab', sans-serif;
   font-weight: 600;
-  color: #0b1220;
+  color: #012D55;
 }
 
 /* Kaarten */
@@ -62,45 +54,40 @@
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform .25s ease;
 }
-.themed .card:hover .img { transform: scale(1.04); }
 
-/* Ribbon (badge linksboven op afbeelding) */
+/* Badge: vierkant, kleur #5D3D69, tekst wit */
 .themed .badge {
-  position:absolute; left:12px; top:12px;
+  position: absolute; left:12px; top:12px;
   display:inline-block;
-  padding:6px 12px;
+  padding:6px 10px;
   font-size:12px; font-weight:700;
-  border-radius:999px;
-  background: var(--ribbon);
+  border-radius:4px;         /* vierkant */
+  background:#5D3D69;
   color:#fff;
-  box-shadow: 0 2px 10px rgba(93,61,105,.25);
+  box-shadow: 0 2px 8px rgba(93,61,105,.25);
 }
 
-/* Body tekst */
-.themed .body { padding: 16px 18px; }
+/* Tekst binnen kaart */
+.themed .body { padding:16px 18px; }
 .themed .addr { margin:0; color: var(--muted); }
 .themed .meta { margin:8px 0 0; color: var(--muted); font-size:12px; }
 
 /* Buttons */
 .themed .actions {
   display:flex; gap:10px;
-  padding: 12px 18px;
+  padding:12px 18px;
   border-top:1px solid var(--border);
 }
 .themed .actions .btn {
-  display:inline-flex; align-items:center; justify-content:center;
   padding:10px 14px;
-  border-radius:10px;
+  border-radius:8px;
   text-decoration:none;
   color:#fff;
   background: var(--accent);
   border: 1px solid color-mix(in srgb, var(--accent) 60%, #ffffff);
   box-shadow: 0 6px 16px rgba(0,124,186,.2);
-  transition: background-color .15s ease, transform .08s ease;
 }
 .themed .actions .btn:hover {
   background: color-mix(in srgb, var(--accent) 85%, #064c6f);
 }
-.themed .actions .btn:active { transform: translateY(1px); }
