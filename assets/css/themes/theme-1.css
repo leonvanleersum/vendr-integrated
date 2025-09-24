@@ -8,11 +8,11 @@
   --text:#0f172a;
   --muted:#495873;
   --border:#d5e5e9;
-  --accent:#007CBA;
+  --accent:#5D3D69;
   --ok:#22c55e;
   --warn:#f59e0b;
-  --sold:#111827;
-  --radius:12px;
+  --sold:#5D3D69;
+  --radius:18px;
   --shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
@@ -33,7 +33,7 @@
 /* Kaarten */
 .themed .card {
   background: var(--panel);
-  border: 1px solid var(--border);
+  border: 0px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   transition: transform .12s ease, box-shadow .2s ease;
@@ -61,11 +61,10 @@
   position: absolute; left:12px; top:12px;
   display:inline-block;
   padding:6px 10px;
-  font-size:12px; font-weight:700;
-  border-radius:4px;         /* vierkant */
+  font-size:16px; font-weight:700;
+  border-radius:0px;         /* vierkant */
   background:#5D3D69;
   color:#fff;
-  box-shadow: 0 2px 8px rgba(93,61,105,.25);
 }
 
 /* Tekst binnen kaart */
@@ -81,12 +80,11 @@
 }
 .themed .actions .btn {
   padding:10px 14px;
-  border-radius:8px;
+  border-radius:0px;
   text-decoration:none;
-  color:#fff;
+  color:#5D3D69;
   background: var(--accent);
-  border: 1px solid color-mix(in srgb, var(--accent) 60%, #ffffff);
-  box-shadow: 0 6px 16px rgba(0,124,186,.2);
+  border: 0px solid color-mix(in srgb, var(--accent) 60%, #ffffff);
 }
 .themed .actions .btn:hover {
   background: color-mix(in srgb, var(--accent) 85%, #064c6f);
